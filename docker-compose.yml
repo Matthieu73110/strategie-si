@@ -1,0 +1,34 @@
+version: "3"
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - rabbitmq
+
+  logger:
+    build:
+      context: ./logger
+      dockerfile: Dockerfile
+    container_name: logger
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./logger:/app
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  stock:
+    build:
+      context: ./stock
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
